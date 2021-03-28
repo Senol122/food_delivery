@@ -9,9 +9,13 @@ public class SupplierCompany extends Company {
     private ArrayList<Supplier> suppliers = new ArrayList<>();
 
     public SupplierCompany(String name, int nrOfEmployees, boolean international, int nrOfTrucks, ArrayList<Supplier> suppliers) {
-        super(name, nrOfEmployees, international);
+        super(name, international);
         this.nrOfTrucks = nrOfTrucks;
         this.suppliers = suppliers;
+    }
+
+    public SupplierCompany() {
+        super();
     }
 
     public int getNrOfTrucks() {
@@ -34,6 +38,10 @@ public class SupplierCompany extends Company {
         return suppliers.get(n);
     }
 
+    public void addSupplier(Supplier x){
+        suppliers.add(x);
+    }
+
     public void setSupplier(Supplier x, int n){
         this.suppliers.set(n, x);
     }
@@ -42,7 +50,6 @@ public class SupplierCompany extends Company {
     public String toString() {
         return "SupplierCompany{" +
                 "name='" + name + '\'' +
-                ", nrOfEmployees=" + nrOfEmployees +
                 ", international=" + international +
                 ", nrOfTrucks=" + nrOfTrucks +
                 ", suppliers=" + suppliers +

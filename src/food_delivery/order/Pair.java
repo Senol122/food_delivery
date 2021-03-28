@@ -1,4 +1,5 @@
 package food_delivery.order;
+import food_delivery.restaurant.Dish;
 
 public class Pair<Dish, Integer> {
     private Dish dish;

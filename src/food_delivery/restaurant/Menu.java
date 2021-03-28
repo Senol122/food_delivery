@@ -3,28 +3,43 @@ package food_delivery.restaurant;
 import java.util.ArrayList;
 
 public class Menu {
-    private int nrOfPages;
-    private ArrayList<Dish> ListOfDishes = new ArrayList<Dish>();
+    private ArrayList<Dish> ListOfDishes = new ArrayList<>();
 
-    public Menu(int nrOfPages) {
-        this.nrOfPages = nrOfPages;
+    public Menu() {
     }
 
-    public int getNrOfPages() {
-        return nrOfPages;
+    public Menu(ArrayList<Dish> listOfDishes) {
+        this.ListOfDishes = listOfDishes;
     }
 
-    public void setNrOfPages(int nrOfPages) {
-        this.nrOfPages = nrOfPages;
-    }
-
-    public ArrayList<Dish> getListOfDishes() {
+    public ArrayList<Dish> getMenu() {
         return ListOfDishes;
+    }
+
+    public int getSize(){
+        return ListOfDishes.size();
     }
 
     public void setListOfDishes(ArrayList<Dish> listOfDishes) {
         ListOfDishes = listOfDishes;
     }
 
+    public void addDish(Dish x){
+        ListOfDishes.add(x);
+    }
 
+    public String getDishName(int i){
+        return ListOfDishes.get(i).getName();
+    }
+
+    public Dish getDish(int i){
+        return ListOfDishes.get(i);
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "ListOfDishes=" + ListOfDishes +
+                '}';
+    }
 }

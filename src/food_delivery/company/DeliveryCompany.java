@@ -7,10 +7,14 @@ public class DeliveryCompany extends Company {
     private int nrOfCars;
     private ArrayList<Courier> couriers = new ArrayList<>();
 
-    public DeliveryCompany(String name, int nrOfEmployees, boolean international, int nrOfCars, ArrayList<Courier> couriers) {
-        super(name, nrOfEmployees, international);
+    public DeliveryCompany(String name, boolean international, int nrOfCars, ArrayList<Courier> couriers) {
+        super(name, international);
         this.nrOfCars = nrOfCars;
         this.couriers = couriers;
+    }
+
+    public DeliveryCompany() {
+        super();
     }
 
     public int getNrOfCars() {
@@ -33,6 +37,10 @@ public class DeliveryCompany extends Company {
         return couriers.get(n);
     }
 
+    public void addCourier(Courier x){
+        couriers.add(x);
+    }
+
     public void setCourier(Courier x, int n){
         this.couriers.set(n, x);
     }
@@ -41,7 +49,6 @@ public class DeliveryCompany extends Company {
     public String toString() {
         return "DeliveryCompany{" +
                 "name='" + name + '\'' +
-                ", nrOfEmployees=" + nrOfEmployees +
                 ", international=" + international +
                 ", nrOfCars=" + nrOfCars +
                 ", couriers=" + couriers +

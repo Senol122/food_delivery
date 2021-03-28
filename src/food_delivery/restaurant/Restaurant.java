@@ -1,16 +1,22 @@
 package food_delivery.restaurant;
 
-import java.util.ArrayList;
+import food_delivery.services.Identifiable;
 
-public class Restaurant {
+public class Restaurant implements Identifiable{
+    private String id;
     private String name;
     private String address;
     private Menu menu;
 
     public Restaurant(String name, String address, Menu menu) {
+        this.id = genID();
         this.name = name;
         this.address = address;
         this.menu = menu;
+    }
+
+    public String getId(){
+        return id;
     }
 
     public String getName() {
@@ -40,9 +46,15 @@ public class Restaurant {
     @Override
     public String toString() {
         return "Restaurant{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", menu=" + menu +
                 '}';
+    }
+
+    @Override
+    public String getID() {
+        return id;
     }
 }

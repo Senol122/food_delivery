@@ -2,12 +2,13 @@ package food_delivery.company;
 
 public class Company {
     protected String name;
-    protected int nrOfEmployees;
     protected boolean international;
 
-    public Company(String name, int nrOfEmployees, boolean international) {
+    public Company() {
+    }
+
+    public Company(String name, boolean international) {
         this.name = name;
-        this.nrOfEmployees = nrOfEmployees;
         this.international = international;
     }
 
@@ -17,14 +18,6 @@ public class Company {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getNrOfEmployees() {
-        return nrOfEmployees;
-    }
-
-    public void setNrOfEmployees(int nrOfEmployees) {
-        this.nrOfEmployees = nrOfEmployees;
     }
 
     public boolean isInternational() {
@@ -39,7 +32,6 @@ public class Company {
     public String toString() {
         return "Company{" +
                 "name='" + name + '\'' +
-                ", nrOfEmployees=" + nrOfEmployees +
                 ", international=" + international +
                 '}';
     }

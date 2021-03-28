@@ -1,11 +1,20 @@
 package food_delivery.restaurant;
+import food_delivery.services.Identifiable;
 
-public class Dish {
+public class Dish implements Identifiable{
+    private String dish_id;
     private String name;
     private String weight;
-    private String price;
+    private int price;
 
-    public Dish(String name, String weight, String price) {
+    public Dish(){
+        this.name = "";
+        this.weight = "";
+        this.price = 0;
+    }
+
+    public Dish(String name, String weight, int price) {
+        this.dish_id = genID();
         this.name = name;
         this.weight = weight;
         this.price = price;
@@ -27,12 +36,20 @@ public class Dish {
         this.weight = weight;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getDish_id() {
+        return dish_id;
+    }
+
+    public void setDish_id(String dish_id) {
+        this.dish_id = dish_id;
     }
 
     @Override
@@ -40,7 +57,12 @@ public class Dish {
         return "Dish{" +
                 "name='" + name + '\'' +
                 ", weight='" + weight + '\'' +
-                ", price='" + price + '\'' +
+                ", price='" + price + "$" + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getID() {
+        return dish_id;
     }
 }
