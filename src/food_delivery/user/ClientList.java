@@ -25,6 +25,16 @@ public class ClientList {
         return false;
     }
 
+    public Client findClient(String email){
+        for(int i = 0 ; i < clientList.size(); i++){
+            if(clientList.get(i).getEmail().equals(email)){
+                return clientList.get(i);
+            }
+        }
+
+        return null;
+    }
+
     public Client getClient(int n){
         return clientList.get(n);
     }

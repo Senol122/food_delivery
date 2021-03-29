@@ -1,10 +1,12 @@
 package food_delivery.user;
+import food_delivery.order.OrderHistory;
 import food_delivery.services.Identifiable;
 
 public class Client extends User implements Identifiable{
     private String client_id;
     private String email;
     private String address;
+    private OrderHistory history = new OrderHistory();
 
     public Client(String name, String phone, String email, String address){
         super(name, phone);
@@ -24,6 +26,14 @@ public class Client extends User implements Identifiable{
     public void setEmail(String email){this.email = email;}
 
     public void setAddress(String address){this.address = address;}
+
+    public void getOrderHistory(){
+        System.out.println(history);
+    }
+
+    public OrderHistory getHistory(){
+        return this.history;
+    }
 
     @Override
     public String toString() {

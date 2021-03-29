@@ -31,6 +31,6 @@ public class Pair<Dish, Integer> {
         return "Pair{" +
                 "dish=" + dish +
                 ", quantity=" + quantity +
-                '}';
+                '}' + "\n";
     }
 }

@@ -9,14 +9,20 @@ public class Order implements Identifiable {
     private String client_id;
     private String courier_id;
     private String order_date;
-    private ArrayList<Pair<Dish, Integer>> dishQuantityPair;
+    private ArrayList<Pair<Dish, Integer>> dishQuantityPair = new ArrayList<>();
 
-    public Order(String client_id, String courier_id, String order_date, ArrayList<Pair<Dish, Integer>> dishQuantityPair) {
+    public Order(String client_id, String courier_id, String order_date) {
         this.order_id = genID();
         this.client_id = client_id;
         this.courier_id = courier_id;
         this.order_date = order_date;
-        this.dishQuantityPair = dishQuantityPair;
+    }
+
+    public Order(Order x){
+        this.order_id = x.order_id;
+        this.order_date = x.order_date;
+        this.client_id = x.client_id;
+        this.courier_id = x.courier_id;
     }
 
     public String getOrder_id(){
@@ -62,7 +68,7 @@ public class Order implements Identifiable {
     public int getTotalAmount(){
         int TotalAmount = 0;
         for(int i=0 ; i < dishQuantityPair.size() ; i++){
-            TotalAmount += dishQuantityPair.get(i).getDish().getPrice();
+            TotalAmount += dishQuantityPair.get(i).getDish().getPrice() * dishQuantityPair.get(i).getQuantity();
         }
 
         return TotalAmount;
@@ -71,11 +77,9 @@ public class Order implements Identifiable {
     @Override
     public String toString() {
         return "Order{" +
-                "client_id=" + client_id +
-                ", courier_id=" + courier_id +
-                ", order_date='" + order_date + '\'' +
+                "order_date='" + order_date + '\'' +
                 ", dishQuantityPair=" + dishQuantityPair +
-                '}';
+                '}' + "\n";
     }
 
     @Override
