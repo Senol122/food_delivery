@@ -8,6 +8,9 @@ public class Restaurant implements Identifiable{
     private String address;
     private Menu menu;
 
+    public Restaurant() {
+    }
+
     public Restaurant(String name, String address, Menu menu) {
         this.id = genID();
         this.name = name;
@@ -33,6 +36,10 @@ public class Restaurant implements Identifiable{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Menu getMenu() {

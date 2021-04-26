@@ -5,6 +5,9 @@ public class Courier extends  User implements Identifiable {
     private String courier_id;
     private String carNumberPlate;
 
+    public Courier() {
+    }
+
     public Courier(String name, String phone, String carNumberPlate){
         super(name, phone);
         this.courier_id = genID();

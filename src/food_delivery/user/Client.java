@@ -8,6 +8,9 @@ public class Client extends User implements Identifiable{
     private String address;
     private OrderHistory history = new OrderHistory();
 
+    public Client() {
+    }
+
     public Client(String name, String phone, String email, String address){
         super(name, phone);
         this.client_id = genID();

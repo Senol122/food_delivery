@@ -4,6 +4,9 @@ import food_delivery.services.Identifiable;
 public class Supplier extends User implements Identifiable{
     private String supplier_id;
 
+    public Supplier() {
+    }
+
     public Supplier(String name, String phone){
         super(name, phone);
         this.supplier_id = genID();

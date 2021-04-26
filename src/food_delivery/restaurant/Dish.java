@@ -55,9 +55,10 @@ public class Dish implements Identifiable{
     @Override
     public String toString() {
         return "Dish{" +
-                "name='" + name + '\'' +
+                "dish_id='" + dish_id + '\'' +
+                ", name='" + name + '\'' +
                 ", weight='" + weight + '\'' +
-                ", price='" + price + "$" + '\'' +
+                ", price=" + price +
                 '}';
     }
 

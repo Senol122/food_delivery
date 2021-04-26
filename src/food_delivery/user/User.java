@@ -5,8 +5,7 @@ public class User {
     protected String phone;
 
     public User(){
-        name = "";
-        phone = "";
+
     }
 
     public User(String name, String phone){
