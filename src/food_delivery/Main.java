@@ -12,6 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+//        ----------------INIT UTILITY CLASSES---------------
         Functions functions = new Functions();
 
         PauseTest pause = new PauseTest();
@@ -84,14 +85,6 @@ public class Main {
             e.printStackTrace();
         }
 
-//        System.out.println(clientList);
-//        System.out.println(supplier);
-//        System.out.println(delivery);
-//        System.out.println(dishList.getDishList().size());
-//        System.out.println(dishList.getDish(0));
-//        System.out.println(resList);
-//        pause.pause();
-
 //        ------------INIT MENUS-------------------------------
         Menu menu1 = new Menu();
         Menu menu2 = new Menu();
@@ -110,51 +103,50 @@ public class Main {
         menu3.addDish(dishList.getDish(7));
         menu3.addDish(dishList.getDish(8));
 
+//        ------------SET MENUS FOR RESTAURANTS-----------------
         resList.getRestaurant(0).setMenu(menu1);
         resList.getRestaurant(1).setMenu(menu2);
         resList.getRestaurant(2).setMenu(menu3);
 
 
 //        -----------INIT ORDER HISTORY------------------------
-//        Pair<Dish, Integer> pair1 = new Pair<>(dishList.getDish(1), 3);
-//        Pair<Dish, Integer> pair2 = new Pair<>(dishList.getDish(5), 6);
-//        Pair<Dish, Integer> pair3 = new Pair<>(dishList.getDish(7), 1);
-//        Pair<Dish, Integer> pair4 = new Pair<>(dishList.getDish(3), 3);
-//        Pair<Dish, Integer> pair5 = new Pair<>(dishList.getDish(6), 7);
-//        Pair<Dish, Integer> pair6 = new Pair<>(dishList.getDish(9), 2);
-//        Pair<Dish, Integer> pair7 = new Pair<>(dishList.getDish(3), 5);
-//        Pair<Dish, Integer> pair8 = new Pair<>(dishList.getDish(5), 3);
-//        Pair<Dish, Integer> pair9 = new Pair<>(dishList.getDish(1), 8);
+        Pair<Dish, Integer> pair1 = new Pair<>(dishList.getDish(0), 3);
+        Pair<Dish, Integer> pair2 = new Pair<>(dishList.getDish(4), 6);
+        Pair<Dish, Integer> pair3 = new Pair<>(dishList.getDish(6), 1);
+        Pair<Dish, Integer> pair4 = new Pair<>(dishList.getDish(2), 3);
+        Pair<Dish, Integer> pair5 = new Pair<>(dishList.getDish(5), 7);
+        Pair<Dish, Integer> pair6 = new Pair<>(dishList.getDish(8), 2);
+        Pair<Dish, Integer> pair7 = new Pair<>(dishList.getDish(2), 5);
+        Pair<Dish, Integer> pair8 = new Pair<>(dishList.getDish(4), 3);
+        Pair<Dish, Integer> pair9 = new Pair<>(dishList.getDish(0), 8);
 
-//        Order order1 = new Order(clientList.getClient(1).getClient_id(), delivery.getCourier(1).getCourier_id(), "23-08-2021");
-//        Order order2 = new Order(clientList.getClient(1).getClient_id(), delivery.getCourier(5).getCourier_id(), "14-05-2021");
-//        Order order3 = new Order(clientList.getClient(3).getClient_id(), delivery.getCourier(5).getCourier_id(), "12-03-2020");
-//        Order order4 = new Order(clientList.getClient(2).getClient_id(), delivery.getCourier(5).getCourier_id(), "05-01-2021");
-//        Order order5 = new Order(clientList.getClient(5).getClient_id(), delivery.getCourier(1).getCourier_id(), "15-04-2021");
+        Order order1 = new Order(clientList.getClient(0).getClient_id(), delivery.getCourier(0).getCourier_id(), "23-08-2021");
+        Order order2 = new Order(clientList.getClient(0).getClient_id(), delivery.getCourier(4).getCourier_id(), "14-05-2021");
+        Order order3 = new Order(clientList.getClient(2).getClient_id(), delivery.getCourier(4).getCourier_id(), "12-03-2020");
+        Order order4 = new Order(clientList.getClient(1).getClient_id(), delivery.getCourier(4).getCourier_id(), "05-01-2021");
+        Order order5 = new Order(clientList.getClient(4).getClient_id(), delivery.getCourier(0).getCourier_id(), "15-04-2021");
 
-//        order1.addOrderItem(pair1);
-//        order2.addOrderItem(pair2);
-//        order2.addOrderItem(pair9);
-//        order3.addOrderItem(pair3);
-//        order3.addOrderItem(pair4);
-//        order4.addOrderItem(pair5);
-//        order5.addOrderItem(pair6);
-//        order5.addOrderItem(pair7);
-//        order5.addOrderItem(pair8);
+        order1.addOrderItem(pair1);
+        order2.addOrderItem(pair2);
+        order2.addOrderItem(pair9);
+        order3.addOrderItem(pair3);
+        order3.addOrderItem(pair4);
+        order4.addOrderItem(pair5);
+        order5.addOrderItem(pair6);
+        order5.addOrderItem(pair7);
+        order5.addOrderItem(pair8);
 
-//        clientList.getClient(1).getHistory().addOrder(order1);
-//        clientList.getClient(1).getHistory().addOrder(order2);
-//        clientList.getClient(3).getHistory().addOrder(order3);
-//        clientList.getClient(2).getHistory().addOrder(order4);
-//        clientList.getClient(5).getHistory().addOrder(order5);
+        clientList.getClient(0).getHistory().addOrder(order1);
+        clientList.getClient(0).getHistory().addOrder(order2);
+        clientList.getClient(2).getHistory().addOrder(order3);
+        clientList.getClient(1).getHistory().addOrder(order4);
+        clientList.getClient(4).getHistory().addOrder(order5);
 
 //        ------------INIT KEYBOARD INPUTS---------------------
         String email = "";
         Scanner emailInput = new Scanner(System.in);
         Scanner optionInput = new Scanner(System.in);
         Scanner dishSearch = new Scanner(System.in);
-        Scanner dishSearch2 = new Scanner(System.in);
-        Scanner quantityScan = new Scanner(System.in);
         Scanner menuSearch = new Scanner(System.in);
         Scanner checkoutInput = new Scanner(System.in);
         Scanner addressInput = new Scanner(System.in);
@@ -227,14 +219,7 @@ public class Main {
                     break;
                 }
                 case "5":{
-                    System.out.println("Dish name: ");
-                    String dish = dishSearch2.nextLine();
-                    System.out.println("Quantity: ");
-                    int quantity = quantityScan.nextInt();
-                    Dish auxDish = resList.dishByName2(dish);
-                    Pair auxPair = new Pair(auxDish, quantity);
-                    order.addOrderItem(auxPair);
-                    System.out.println("Dish successfully added to order!");
+                    functions.addDishToOrder(resList, order);
                     pause.pause();
                     break;
                 }
@@ -244,16 +229,9 @@ public class Main {
                     break;
                 }
                 case "7":{
-                    System.out.println("Total amount: " + order.getTotalAmount() + "\n");
-                    System.out.println("Proceed to payment?[Y/N]");
-                    String checkoutIn = checkoutInput.nextLine();
-                    if(checkoutIn.equals("Y") || checkoutIn.equals("y")){
-                        clientList.findClient(email).getHistory().addOrder(order);
-                        System.out.println("Checkout done! Enjoy your order :)");
-//                        order.getArray().clear();
-                    }   else {
-                        System.out.println("Continue shopping");
-                    }
+                    Order orderAux = functions.checkout(order, clientList, email);
+//                  Use the order from the checkout to find the clientId and the orderId needed to write on the log
+                    functions.logOrder(clientList.findClientById(orderAux.getClient_id()).getName(), orderAux.getOrder_id());
                     pause.pause();
                     break;
                 }

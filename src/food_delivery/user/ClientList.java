@@ -35,6 +35,16 @@ public class ClientList {
         return null;
     }
 
+    public Client findClientById(String clientId){
+        for(int i = 0 ; i < clientList.size(); i++){
+            if(clientList.get(i).getClient_id().equals(clientId)){
+                return clientList.get(i);
+            }
+        }
+
+        return null;
+    }
+
     public Client getClient(int n){
         return clientList.get(n);
     }
