@@ -30,6 +30,10 @@ public class Courier extends  User implements Identifiable {
         this.carNumberPlate = carNumberPlate;
     }
 
+    public boolean isEmpty(){
+        return courier_id == null && carNumberPlate == null && name == null && phone == null;
+    }
+
     @Override
     public String toString() {
         return "Courier{" +

@@ -45,6 +45,25 @@ public class DeliveryCompany extends Company {
         this.couriers.set(n, x);
     }
 
+    public Courier findCourierByCarNumberPlate(String carNumberPlate){
+        for(int i = 0 ; i < couriers.size(); i++){
+            if(couriers.get(i).getCarNumberPlate().equals(carNumberPlate)){
+                return couriers.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    public boolean checkCarNumberPlate(String carNumberPlate){
+        for(int i=0 ; i < couriers.size() ; i++){
+            if(couriers.get(i).getCarNumberPlate().equals(carNumberPlate)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "DeliveryCompany{" +

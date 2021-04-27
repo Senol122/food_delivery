@@ -12,6 +12,7 @@ import food_delivery.user.Supplier;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -41,19 +42,18 @@ public class Functions {
         System.out.println("Dish successfully added to order!");
     }
 
-    public Order checkout(Order orderX, ClientList clientList, String email){
+    public void checkout(Order orderX, ClientList clientList){
         Scanner checkoutInput = new Scanner(System.in);
 
         System.out.println("Total amount: " + orderX.getTotalAmount() + "\n");
         System.out.println("Proceed to payment?[Y/N]");
         String checkoutIn = checkoutInput.nextLine();
         if(checkoutIn.equals("Y") || checkoutIn.equals("y")){
-            clientList.findClient(email).getHistory().addOrder(orderX);
+            clientList.findClientById(orderX.getClient_id()).getHistory().addOrder(orderX);
+            this.logOrder(clientList.findClientById(orderX.getClient_id()).getName(), orderX.getOrder_id());
             System.out.println("Checkout done! Enjoy your order :)");
-            return orderX;
         }   else {
             System.out.println("Continue shopping");
-            return null;
         }
     }
 
@@ -177,5 +177,94 @@ public class Functions {
         }
     }
 
+    public void logLogin(String name){
+        try{
+            File file = new File("log.csv");
+            FileWriter fr = new FileWriter(file, true);
+            BufferedWriter logWriter = new BufferedWriter(fr);
+            logWriter.write( "The user with the name " + name + " logged in at " + format.format(date) );
+            logWriter.newLine();
+            logWriter.close();
+            fr.close();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void logRegister(String clientName){
+        try{
+            File file = new File("log.csv");
+            FileWriter fr = new FileWriter(file, true);
+            BufferedWriter logWriter = new BufferedWriter(fr);
+            logWriter.write( "The client with the name " + clientName + " registered at " + format.format(date) );
+            logWriter.newLine();
+            logWriter.close();
+            fr.close();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void logRegisterOrder(String courierName, String orderId){
+        try{
+            File file = new File("log.csv");
+            FileWriter fr = new FileWriter(file, true);
+            BufferedWriter logWriter = new BufferedWriter(fr);
+            logWriter.write( courierName + " registered a successful delivery with the ID: " + orderId + " - " + format.format(date) );
+            logWriter.newLine();
+            logWriter.close();
+            fr.close();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void registerClient(Client clientX){
+        try{
+            File file = new File("clients.csv");
+            FileWriter fr = new FileWriter(file, true);
+            BufferedWriter logWriter = new BufferedWriter(fr);
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(clientX.getClient_id());
+            sb.append(",");
+            sb.append(clientX.getName());
+            sb.append(",");
+            sb.append(clientX.getPhone());
+            sb.append(",");
+            sb.append(clientX.getEmail());
+            sb.append(",");
+            sb.append(clientX.getAddress());
+            sb.append("\n");
+
+            logWriter.write(sb.toString());
+            logWriter.newLine();
+            logWriter.close();
+            fr.close();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void registerOrder(AccountOperations operations, ArrayList<Order> orders, ClientList clientList){
+        Scanner orderClientIdInput = new Scanner(System.in);
+        Scanner orderDateInput = new Scanner(System.in);
+
+        System.out.println("Enter info about the order delivery");
+        System.out.print("Client Id: ");
+        String orderClientId = orderClientIdInput.nextLine();
+        System.out.print("Order date: ");
+        String orderDate = orderDateInput.nextLine();
+
+        Order newOrder = new Order(orderClientId, operations.getCourier().getCourier_id(), orderDate);
+
+        orders.add(newOrder);
+        clientList.findClientById(orderClientId).getHistory().addOrder(newOrder);
+
+        logRegisterOrder(operations.getCourier().getName(), newOrder.getOrder_id());
+
+        System.out.println("Delivery successfully registered");
+    }
 
 }

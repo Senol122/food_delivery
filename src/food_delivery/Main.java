@@ -5,6 +5,9 @@ import food_delivery.services.*;
 import food_delivery.restaurant.*;
 import food_delivery.order.*;
 import food_delivery.company.*;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 
@@ -17,6 +20,8 @@ public class Main {
 
         PauseTest pause = new PauseTest();
 
+        AccountOperations operations = new AccountOperations();
+
 //        -----------------INIT LISTS------------------------
         ClientList clientList = new ClientList();
 
@@ -27,6 +32,8 @@ public class Main {
         DishList dishList = new DishList();
 
         RestaurantList resList = new RestaurantList();
+
+        ArrayList<Order> orders = new ArrayList<>();
 
 //        ------------READING FROM THE FILES-------------------
 
@@ -136,45 +143,49 @@ public class Main {
         order5.addOrderItem(pair7);
         order5.addOrderItem(pair8);
 
+//      Add orders to histories of each client
         clientList.getClient(0).getHistory().addOrder(order1);
         clientList.getClient(0).getHistory().addOrder(order2);
         clientList.getClient(2).getHistory().addOrder(order3);
         clientList.getClient(1).getHistory().addOrder(order4);
         clientList.getClient(4).getHistory().addOrder(order5);
 
+//      Add orders to ArrayList<> orders
+        orders.add(order1);
+        orders.add(order2);
+        orders.add(order3);
+        orders.add(order4);
+        orders.add(order5);
+
 //        ------------INIT KEYBOARD INPUTS---------------------
-        String email = "";
-        Scanner emailInput = new Scanner(System.in);
         Scanner optionInput = new Scanner(System.in);
         Scanner dishSearch = new Scanner(System.in);
         Scanner menuSearch = new Scanner(System.in);
-        Scanner checkoutInput = new Scanner(System.in);
         Scanner addressInput = new Scanner(System.in);
+        Scanner accountOptionInput = new Scanner(System.in);
 
-
-//        ------------LOGIN------------------------------------
         System.out.println("Welcome to Hot Orders!");
-        System.out.println("Enter your credentials bellow");
-        System.out.print("Email: ");
-        String emailAux = emailInput.nextLine();
+        System.out.println("Login as a: ");
+        System.out.println("-> Client");
+        System.out.println("-> Courier");
+        System.out.println("-> Supplier");
 
-        while(email.isEmpty()){
-            if(clientList.checkEmail(emailAux)){
-                System.out.println("You're logged in!");
-                email = emailAux;
-                pause.pause();
-            }   else {
-                System.out.println("Email not found.");
-                pause.pause();
-                System.out.print("Email: ");
-                emailAux = emailInput.nextLine();
-            }
+        System.out.print("Option: ");
+        String accountOption = accountOptionInput.nextLine();
 
+        if(accountOption.equals("client") || accountOption.equals("Client")){
+            operations.login(clientList);
+        }   else if(accountOption.equals("courier") || accountOption.equals("Courier")){
+            operations.loginCourier(delivery);
+        }   else if(accountOption.equals("supplier") || accountOption.equals("Supplier")){
+            operations.loginSupplier(supplier);
+        }   else {
+            System.out.println("You didn't choose one of the options. Run the program again.");
         }
 
-        Order order = new Order(clientList.findClient(email).getClient_id(), "23", "29-02-2021");
+        while(operations.isLoginStateClient()){
+            Order order = new Order(operations.getClient().getClient_id(), "23", "29-02-2021");
 
-        while(!email.isEmpty()){
             System.out.println();
             System.out.println("Option Menu(choose index of the action)");
             System.out.println("1. See full list of Restaurants");
@@ -190,7 +201,7 @@ public class Main {
             System.out.println("0. Logout");
             System.out.println("\n");
 
-            System.out.println("Option: ");
+            System.out.print("Option: ");
             String option = optionInput.nextLine();
 
             switch(option) {
@@ -229,31 +240,59 @@ public class Main {
                     break;
                 }
                 case "7":{
-                    Order orderAux = functions.checkout(order, clientList, email);
-//                  Use the order from the checkout to find the clientId and the orderId needed to write on the log
-                    functions.logOrder(clientList.findClientById(orderAux.getClient_id()).getName(), orderAux.getOrder_id());
+                    functions.checkout(order, clientList);
                     pause.pause();
                     break;
                 }
                 case "8":{
-                    clientList.findClient(email).getOrderHistory();
+                    operations.getClient().getOrderHistory();
                     pause.pause();
                     break;
                 }
                 case "9":{
                     System.out.print("Enter new address: ");
                     String newAddress = addressInput.nextLine();
-                    clientList.findClient(email).setAddress(newAddress);
+                    operations.getClient().setAddress(newAddress);
                     pause.pause();
                     break;
                 }
                 case "10":{
-                    System.out.println(clientList.findClient(email));
+                    System.out.println(operations.getClient());
                     pause.pause();
                     break;
                 }
                 case "0":{
-                    email = "";
+                    operations.setLoginStateClient(false);
+                    System.out.println("Logout");
+                    pause.pause();
+                    break;
+                }
+                default:{
+                    System.out.println("No action with index " + option);
+                    pause.pause();
+                    break;
+                }
+            }
+        }
+
+        while(operations.isLoginStateCourier()){
+            System.out.println();
+            System.out.println("Option Menu(choose index of the action)");
+            System.out.println("1. Register delivery");
+            System.out.println("0. Logout");
+            System.out.println("\n");
+
+            System.out.print("Option: ");
+            String option = optionInput.nextLine();
+
+            switch (option){
+                case "1":{
+                    functions.registerOrder(operations, orders, clientList);
+                    pause.pause();
+                    break;
+                }
+                case "0":{
+                    operations.setLoginStateCourier(false);
                     System.out.println("Logout");
                     pause.pause();
                     break;

@@ -31,11 +31,19 @@ public class Client extends User implements Identifiable{
     public void setAddress(String address){this.address = address;}
 
     public void getOrderHistory(){
-        System.out.println(history);
+        if(this.history.getHistory().size() != 0){
+            System.out.println(history);
+        }   else {
+            System.out.println("There is no order history to show.");
+        }
     }
 
     public OrderHistory getHistory(){
         return this.history;
+    }
+
+    public boolean isEmpty(){
+        return client_id == null && name == null && email == null && address == null;
     }
 
     @Override
