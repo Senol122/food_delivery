@@ -264,7 +264,7 @@ public class Functions {
 
         logRegisterOrder(operations.getCourier().getName(), newOrder.getOrder_id());
 
-        System.out.println("Delivery successfully registered");
+        System.out.println("Delivery successfully registered!");
     }
 
 }
