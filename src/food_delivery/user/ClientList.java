@@ -16,9 +16,9 @@ public class ClientList {
         clientList.add(x);
     }
 
-    public boolean checkEmail(String x){
+    public boolean authenticate(String email, String password){
         for(int i=0 ; i < clientList.size() ; i++){
-            if(clientList.get(i).getEmail().equals(x)){
+            if(clientList.get(i).getEmail().equals(email) && clientList.get(i).getPassword().equals(password)){
                 return true;
             }
         }
@@ -43,6 +43,14 @@ public class ClientList {
         }
 
         return null;
+    }
+
+    public void deleteClient(String id){
+        for(int i = 0 ; i < clientList.size(); i++){
+            if(clientList.get(i).getClient_id().equals(id)){
+                clientList.remove(i);
+            }
+        }
     }
 
     public Client getClient(int n){

@@ -45,9 +45,9 @@ public class DeliveryCompany extends Company {
         this.couriers.set(n, x);
     }
 
-    public Courier findCourierByCarNumberPlate(String carNumberPlate){
+    public Courier findCourierByEmail(String email){
         for(int i = 0 ; i < couriers.size(); i++){
-            if(couriers.get(i).getCarNumberPlate().equals(carNumberPlate)){
+            if(couriers.get(i).getEmail().equals(email)){
                 return couriers.get(i);
             }
         }
@@ -55,13 +55,21 @@ public class DeliveryCompany extends Company {
         return null;
     }
 
-    public boolean checkCarNumberPlate(String carNumberPlate){
+    public boolean authenticate(String email, String password){
         for(int i=0 ; i < couriers.size() ; i++){
-            if(couriers.get(i).getCarNumberPlate().equals(carNumberPlate)){
+            if(couriers.get(i).getEmail().equals(email) && couriers.get(i).getPassword().equals(password)){
                 return true;
             }
         }
         return false;
+    }
+
+    public void deleteCourier(String id) {
+        for(int i = 0 ; i < couriers.size() ; i ++){
+            if(couriers.get(i).getCourierId().equals(id)){
+                couriers.remove(i);
+            }
+        }
     }
 
     @Override

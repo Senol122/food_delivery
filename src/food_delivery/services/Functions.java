@@ -5,10 +5,7 @@ import food_delivery.company.SupplierCompany;
 import food_delivery.order.Order;
 import food_delivery.order.Pair;
 import food_delivery.restaurant.*;
-import food_delivery.user.Client;
-import food_delivery.user.ClientList;
-import food_delivery.user.Courier;
-import food_delivery.user.Supplier;
+import food_delivery.user.*;
 
 import java.io.*;
 import java.sql.*;
@@ -90,7 +87,7 @@ public class Functions implements Identifiable {
 
             switch(i){
                 case 0:
-                    courierX.setCourier_id(values[i]);
+                    courierX.setCourierId(values[i]);
                     break;
                 case 1:
                     courierX.setName(values[i]);
@@ -274,7 +271,7 @@ public class Functions implements Identifiable {
         System.out.print("Order date: ");
         String orderDate = orderDateInput.nextLine();
 
-        Order newOrder = new Order(orderClientId, operations.getCourier().getCourier_id(), orderDate);
+        Order newOrder = new Order(orderClientId, operations.getCourier().getCourierId(), orderDate);
 
         orders.add(newOrder);
         clientList.findClientById(orderClientId).getHistory().addOrder(newOrder);
@@ -284,7 +281,7 @@ public class Functions implements Identifiable {
         System.out.println("Delivery successfully registered!");
     }
 
-    public void createConnection(ClientList List, DeliveryCompany delivery, DishList dishList) {
+    public void createConnection(ClientList List, DeliveryCompany delivery, DishList dishList, RestaurantManagerList managerList) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
@@ -298,12 +295,14 @@ public class Functions implements Identifiable {
                 String name = clientRS.getString("name");
                 String phoneNumber = clientRS.getString("phoneNumber");
                 String email = clientRS.getString("email");
+                String password = clientRS.getString("password");
                 String address = clientRS.getString("address");
 
                 aux.setClient_id(id);
                 aux.setName(name);
                 aux.setPhone(phoneNumber);
                 aux.setEmail(email);
+                aux.setPassword(password);
                 aux.setAddress(address);
 
                 List.addClient(aux);
@@ -316,11 +315,15 @@ public class Functions implements Identifiable {
                 String id = courierRS.getString("courierID");
                 String name = courierRS.getString("name");
                 String phoneNumber = courierRS.getString("phoneNumber");
+                String email = courierRS.getString("email");
+                String password = courierRS.getString("password");
                 String carNumberPlate = courierRS.getString("carNumberPlate");
 
-                aux.setCourier_id(id);
+                aux.setCourierId(id);
                 aux.setName(name);
                 aux.setPhone(phoneNumber);
+                aux.setPassword(password);
+                aux.setEmail(email);
                 aux.setCarNumberPlate(carNumberPlate);
 
                 delivery.addCourier(aux);
@@ -343,6 +346,29 @@ public class Functions implements Identifiable {
                 dishList.addDish(aux);
             }
 
+            ResultSet managerRS = statement.executeQuery("SELECT * FROM jdbc.restaurantmanagers");
+            while(managerRS.next()){
+                RestaurantManager aux = new RestaurantManager();
+
+                String managerID = managerRS.getString("id");
+                String restaurantID = managerRS.getString("restaurantID");
+                String name = managerRS.getString("name");
+                String email = managerRS.getString("email");
+                String password = managerRS.getString("password");
+                String phone = managerRS.getString("phone");
+                String workExperience = managerRS.getString("workExperience");
+
+                aux.setManagerID(managerID);
+                aux.setRestaurantID(restaurantID);
+                aux.setName(name);
+                aux.setEmail(email);
+                aux.setPassword(password);
+                aux.setPhone(phone);
+                aux.setWorkExperience(workExperience);
+
+                managerList.addManager(aux);
+            }
+
             statement.close();
 
          } catch (ClassNotFoundException | SQLException e) {
@@ -359,13 +385,57 @@ public class Functions implements Identifiable {
             String name = x.getName();
             String phone = x.getPhone();
             String email = x.getEmail();
+            String password = x.getPassword();
             String address = x.getAddress();
 
             Statement statement = con.createStatement();
 
-            String dbInsertClient = "INSERT INTO jdbc.clients VALUES('" + id + "', '"+ name +"', '"+ phone +"', '"+ email +"', '"+ address +"')";
+            String dbInsertClient = "INSERT INTO jdbc.clients VALUES('" + id + "', '"+ name +"', '"+ phone +"', '"+ email +"', '"+ password +"', '"+ address +"')";
 
             statement.execute(dbInsertClient);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void updateClientAddress(AccountOperations operations){
+        Scanner addressInput = new Scanner(System.in);
+
+        System.out.print("Enter new address: ");
+        String newAddress = addressInput.nextLine();
+
+        operations.getClient().setAddress(newAddress);
+        updateClientAddressMySql(operations.getClient());
+        System.out.println("Address successfully modified!");
+    }
+
+    public void updateClientAddressMySql(Client x) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            Statement statement = con.createStatement();
+
+            String dbUpdateAddress = "UPDATE jdbc.clients SET address='"+ x.getAddress() +"' WHERE(id='"+ x.getClient_id() +"')";
+
+            statement.execute(dbUpdateAddress);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void deleteClient(Client x){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            Statement statement = con.createStatement();
+
+            String dbDeleteClient = "DELETE FROM jdbc.clients WHERE(id='"+ x.getClient_id() +"')";
+
+            statement.execute(dbDeleteClient);
             statement.close();
         } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
@@ -377,14 +447,16 @@ public class Functions implements Identifiable {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
 
-            String id = x.getCourier_id();
+            String id = x.getCourierId();
             String name = x.getName();
             String phone = x.getPhone();
+            String email = x.getEmail();
+            String password = x.getPassword();
             String carNumberPlate = x.getCarNumberPlate();
 
             Statement statement = con.createStatement();
 
-            String dbInsertCourier = "INSERT INTO jdbc.couriers VALUES('" + id + "', '"+ name +"', '"+ phone +"', '"+ carNumberPlate +"')";
+            String dbInsertCourier = "INSERT INTO jdbc.couriers VALUES('" + id + "', '"+ name +"', '"+ email +"', '"+ password +"', '"+ phone +"', '"+ carNumberPlate +"')";
 
             statement.execute(dbInsertCourier);
             statement.close();
@@ -393,7 +465,117 @@ public class Functions implements Identifiable {
         }
     }
 
-    public void insertDish(Dish x){
+    public void updateCourierPhone(AccountOperations operations){
+        Scanner phoneInput = new Scanner(System.in);
+
+        System.out.print("Enter new phone number: ");
+        String newPhoneNumber = phoneInput.nextLine();
+
+        operations.getCourier().setPhone(newPhoneNumber);
+        updateCourierPhoneMySql(operations.getCourier());
+        System.out.println("Phone number successfully modified!");
+    }
+
+    public void updateCourierPhoneMySql(Courier x) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            Statement statement = con.createStatement();
+
+            String dbUpdatePhone = "UPDATE jdbc.couriers SET phoneNumber='"+ x.getPhone() +"' WHERE(id='"+ x.getCourierId() +"')";
+
+            statement.execute(dbUpdatePhone);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void deleteCourier(Courier x){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            Statement statement = con.createStatement();
+
+            String dbDeleteCourier = "DELETE FROM jdbc.couriers WHERE(courierID='"+ x.getCourierId() +"')";
+
+            statement.execute(dbDeleteCourier);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void insertManager(RestaurantManager x){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            String managerID = x.getManagerID();
+            String name = x.getName();
+            String email = x.getEmail();
+            String password = x.getPassword();
+            String phone = x.getPhone();
+            String restaurantID = x.getRestaurantID();
+            String workExperience = x.getWorkExperience();
+
+            Statement statement = con.createStatement();
+
+            String dnInsertManager = "INSERT INTO jdbc.restaurantmanagers VALUES('" + managerID + "', '"+ name +"', '"+ email +"', '"+ password +"', '"+ restaurantID +"', '"+ phone +"', '"+ workExperience +"')";
+
+            statement.execute(dnInsertManager);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void updateManagerWorkExperience(AccountOperations operations){
+        Scanner workInput = new Scanner(System.in);
+
+        System.out.print("Enter new work experience: ");
+        String newWorkExperience = workInput.nextLine();
+
+        operations.getManager().setWorkExperience(newWorkExperience);
+        updateManagerWorkExperienceMySql(operations.getManager());
+        System.out.println("Work experience successfully modified!");
+    }
+
+    public void updateManagerWorkExperienceMySql(RestaurantManager x){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            Statement statement = con.createStatement();
+
+            String dbUpdateWorkExperience = "UPDATE jdbc.restaurantmanagers SET workExperience='"+ x.getWorkExperience() +"' WHERE(id='"+ x.getManagerID() +"')";
+
+            statement.execute(dbUpdateWorkExperience);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void deleteManager(RestaurantManager x) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            Statement statement = con.createStatement();
+
+            String dbDeleteManager = "DELETE FROM jdbc.restaurantmanagers WHERE(id='"+ x.getManagerID() +"')";
+
+            statement.execute(dbDeleteManager);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void insertDishMySql(Dish x){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
@@ -437,7 +619,7 @@ public class Functions implements Identifiable {
                 newDish.setWeight(weight);
                 newDish.setPrice(price);
 
-                insertDish(newDish);
+                insertDishMySql(newDish);
                 dishList.addDish(newDish);
                 ok = true;
                 System.out.println("Dish successfully added!");
@@ -455,16 +637,57 @@ public class Functions implements Identifiable {
         }
     }
 
-    public void updateClientAddress(Client x) {
+    public void updateDishPrice(DishList dishList){
+        Scanner priceInput = new Scanner(System.in);
+        Scanner dishNameInput = new Scanner(System.in);
+
+        System.out.print("Dish name: ");
+        String dishName = dishNameInput.nextLine();
+        System.out.print("Enter new price: ");
+        String newPrice = priceInput.nextLine();
+
+        dishList.dishByName(dishName).setPrice(Integer.parseInt(newPrice));
+        updateDishPriceMySql(dishList.dishByName(dishName));
+        System.out.println("Price successfully modified!");
+    }
+
+    public void updateDishPriceMySql(Dish x){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
 
             Statement statement = con.createStatement();
 
-            String dbUpdateAddress = "UPDATE jdbc.clients SET address='"+ x.getAddress() +"' WHERE(id='"+ x.getClient_id() +"')";
+            String dbUpdatePrice = "UPDATE jdbc.dishes SET price='"+ x.getPrice() +"' WHERE(id='"+ x.getDish_id() +"')";
 
-            statement.execute(dbUpdateAddress);
+            statement.execute(dbUpdatePrice);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void deleteDish(DishList dishList) {
+        Scanner dishNameInput = new Scanner(System.in);
+
+        System.out.print("Name of the dish: ");
+        String dishName = dishNameInput.nextLine();
+
+        dishList.deleteDishByName(dishName);
+        deleteDishMySql(dishList.dishByName(dishName));
+        System.out.println("Dish deleted.");
+    }
+
+    public void deleteDishMySql(Dish x){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            Statement statement = con.createStatement();
+
+            String dbDeleteDish = "DELETE FROM jdbc.dishes WHERE(id='"+ x.getDish_id() +"')";
+
+            statement.execute(dbDeleteDish);
             statement.close();
         } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();

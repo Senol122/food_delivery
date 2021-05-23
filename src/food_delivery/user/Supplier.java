@@ -7,8 +7,8 @@ public class Supplier extends User implements Identifiable{
     public Supplier() {
     }
 
-    public Supplier(String name, String phone){
-        super(name, phone);
+    public Supplier(String name, String email, String password, String phone){
+        super(name, email, password, phone);
         this.supplier_id = genID();
     }
 
@@ -25,6 +25,7 @@ public class Supplier extends User implements Identifiable{
         return "Supplier{" +
                 "supplier_id='" + supplier_id + '\'' +
                 ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 '}';
     }

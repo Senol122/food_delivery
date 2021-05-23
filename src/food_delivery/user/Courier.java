@@ -2,28 +2,28 @@ package food_delivery.user;
 import food_delivery.services.Identifiable;
 
 public class Courier extends  User implements Identifiable {
-    private String courier_id;
+    private String courierId;
     private String carNumberPlate;
 
     public Courier() {
     }
 
-    public Courier(String name, String phone, String carNumberPlate){
-        super(name, phone);
-        this.courier_id = genID();
+    public Courier(String name, String email, String password, String phone, String carNumberPlate){
+        super(name, email, password, phone);
+        this.courierId = genID();
         this.carNumberPlate = carNumberPlate;
     }
 
-    public String getCourier_id() {
-        return courier_id;
+    public String getCourierId() {
+        return courierId;
     }
 
     public String getCarNumberPlate() {
         return carNumberPlate;
     }
 
-    public void setCourier_id(String courier_id) {
-        this.courier_id = courier_id;
+    public void setCourierId(String courierId) {
+        this.courierId = courierId;
     }
 
     public void setCarNumberPlate(String carNumberPlate) {
@@ -31,21 +31,22 @@ public class Courier extends  User implements Identifiable {
     }
 
     public boolean isEmpty(){
-        return courier_id == null && carNumberPlate == null && name == null && phone == null;
+        return courierId == null && carNumberPlate == null && name == null && phone == null && email == null && password == null;
     }
 
     @Override
     public String toString() {
         return "Courier{" +
-                "courier_id='" + courier_id + '\'' +
+                "courier_id='" + courierId + '\'' +
                 ", carNumberPlate='" + carNumberPlate + '\'' +
                 ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 '}';
     }
 
     @Override
     public String getID() {
-        return courier_id;
+        return courierId;
     }
 }

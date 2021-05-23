@@ -7,11 +7,13 @@ public class Restaurant implements Identifiable{
     private String name;
     private String address;
     private Menu menu;
+    private String schedule;
 
     public Restaurant() {
     }
 
-    public Restaurant(String name, String address, Menu menu) {
+    public Restaurant(String name, String address, Menu menu, String schedule) {
+        this.schedule = schedule;
         this.id = genID();
         this.name = name;
         this.address = address;
@@ -56,6 +58,7 @@ public class Restaurant implements Identifiable{
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
+                ", work schedule='" + schedule + '\'' +
                 ", menu=" + menu +
                 '}';
     }
@@ -63,5 +66,13 @@ public class Restaurant implements Identifiable{
     @Override
     public String getID() {
         return id;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
     }
 }

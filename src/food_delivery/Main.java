@@ -6,8 +6,8 @@ import food_delivery.restaurant.*;
 import food_delivery.order.*;
 import food_delivery.company.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 import java.io.*;
 
@@ -29,6 +29,8 @@ public class Main {
 
         SupplierCompany supplier = new SupplierCompany();
 
+        RestaurantManagerList managerList = new RestaurantManagerList();
+
         DishList dishList = new DishList();
 
         RestaurantList resList = new RestaurantList();
@@ -37,22 +39,13 @@ public class Main {
 
 //        ------------READING FROM THE FILES-------------------
 
-        functions.createConnection(clientList, delivery, dishList);
+        functions.createConnection(clientList, delivery, dishList, managerList);
 
         String line = "";
 
         try{
-            BufferedReader brClients = new BufferedReader(new FileReader("clients.csv"));
             BufferedReader brSuppliers = new BufferedReader(new FileReader("suppliers.csv"));
             BufferedReader brRestaurants = new BufferedReader(new FileReader("restaurants.csv"));
-
-            while((line = brClients.readLine()) != null){
-                String[] values = line.split(",");
-
-                Client clientX = new Client();
-
-                functions.clientControl(clientList, clientX, values);
-            }
 
             while((line = brSuppliers.readLine()) != null){
                 String[] values = line.split(",");
@@ -111,11 +104,11 @@ public class Main {
         Pair<Dish, Integer> pair8 = new Pair<>(dishList.getDish(4), 3);
         Pair<Dish, Integer> pair9 = new Pair<>(dishList.getDish(0), 8);
 
-        Order order1 = new Order(clientList.getClient(0).getClient_id(), delivery.getCourier(0).getCourier_id(), "23-08-2021");
-        Order order2 = new Order(clientList.getClient(0).getClient_id(), delivery.getCourier(4).getCourier_id(), "14-05-2021");
-        Order order3 = new Order(clientList.getClient(2).getClient_id(), delivery.getCourier(4).getCourier_id(), "12-03-2020");
-        Order order4 = new Order(clientList.getClient(1).getClient_id(), delivery.getCourier(4).getCourier_id(), "05-01-2021");
-        Order order5 = new Order(clientList.getClient(4).getClient_id(), delivery.getCourier(0).getCourier_id(), "15-04-2021");
+        Order order1 = new Order(clientList.getClient(0).getClient_id(), delivery.getCourier(0).getCourierId(), "23-08-2021");
+        Order order2 = new Order(clientList.getClient(0).getClient_id(), delivery.getCourier(4).getCourierId(), "14-05-2021");
+        Order order3 = new Order(clientList.getClient(2).getClient_id(), delivery.getCourier(4).getCourierId(), "12-03-2020");
+        Order order4 = new Order(clientList.getClient(1).getClient_id(), delivery.getCourier(4).getCourierId(), "05-01-2021");
+        Order order5 = new Order(clientList.getClient(4).getClient_id(), delivery.getCourier(0).getCourierId(), "15-04-2021");
 
         order1.addOrderItem(pair1);
         order2.addOrderItem(pair2);
@@ -145,7 +138,6 @@ public class Main {
         Scanner optionInput = new Scanner(System.in);
         Scanner dishSearch = new Scanner(System.in);
         Scanner menuSearch = new Scanner(System.in);
-        Scanner addressInput = new Scanner(System.in);
         Scanner accountOptionInput = new Scanner(System.in);
 
         System.out.println("Welcome to Hot Orders!");
@@ -153,17 +145,20 @@ public class Main {
         System.out.println("-> Client");
         System.out.println("-> Courier");
         System.out.println("-> Supplier");
+        System.out.println("-> Restaurant Manager");
 
         System.out.print("Option: ");
         String accountOption = accountOptionInput.nextLine();
 
-        if(accountOption.equals("client") || accountOption.equals("Client")){
-            operations.login(clientList);
-        }   else if(accountOption.equals("courier") || accountOption.equals("Courier")){
+        if(accountOption.toLowerCase().equals("client")){
+            operations.loginClient(clientList);
+        }   else if(accountOption.toLowerCase().equals("courier")){
             operations.loginCourier(delivery);
-        }   else if(accountOption.equals("supplier") || accountOption.equals("Supplier")){
+        }   else if(accountOption.toLowerCase().equals("supplier")){
             operations.loginSupplier(supplier);
-        }   else {
+        } else if(accountOption.toLowerCase().equals("restaurant manager") || accountOption.toLowerCase().equals("manager")){
+            operations.loginManager(managerList);
+        } else {
             System.out.println("You didn't choose one of the options. Run the program again.");
         }
 
@@ -183,6 +178,7 @@ public class Main {
             System.out.println("9. See your order history");
             System.out.println("10. Modify your address");
             System.out.println("11. Check account info");
+            System.out.println("12. Delete your account");
             System.out.println("0. Logout");
             System.out.println("\n");
 
@@ -239,14 +235,17 @@ public class Main {
                     break;
                 }
                 case "10":{
-                    System.out.print("Enter new address: ");
-                    String newAddress = addressInput.nextLine();
-                    operations.getClient().setAddress(newAddress);
+                    functions.updateClientAddress(operations);
                     pause.pause();
                     break;
                 }
                 case "11":{
                     System.out.println(operations.getClient());
+                    pause.pause();
+                    break;
+                }
+                case "12": {
+                    operations.deleteClient(clientList);
                     pause.pause();
                     break;
                 }
@@ -268,6 +267,8 @@ public class Main {
             System.out.println();
             System.out.println("Option Menu(choose index of the action)");
             System.out.println("1. Register delivery");
+            System.out.println("2. Modify your phone number");
+            System.out.println("3. Delete your account");
             System.out.println("0. Logout");
             System.out.println("\n");
 
@@ -280,6 +281,16 @@ public class Main {
                     pause.pause();
                     break;
                 }
+                case "2": {
+                    functions.updateCourierPhone(operations);
+                    pause.pause();
+                    break;
+                }
+                case "3": {
+                    operations.deleteCourier(delivery);
+                    pause.pause();
+                    break;
+                }
                 case "0":{
                     operations.setLoginStateCourier(false);
                     System.out.println("Logout");
@@ -287,6 +298,59 @@ public class Main {
                     break;
                 }
                 default:{
+                    System.out.println("No action with index " + option);
+                    pause.pause();
+                    break;
+                }
+            }
+        }
+
+        while(operations.isLoginStateManager()){
+            System.out.println();
+            System.out.println("Option Menu(choose index of the action)");
+            System.out.println("1. Add a new dish");
+            System.out.println("2. Update dish price");
+            System.out.println("3. Delete a dish");
+            System.out.println("4. Change your restaurant's work schedule");
+            System.out.println("5. Update your work experience");
+            System.out.println("6. Delete your account");
+            System.out.println("0. Logout");
+            System.out.println("\n");
+
+            System.out.print("Option: ");
+            String option = optionInput.nextLine();
+
+            switch (option){
+                case "1": {
+                    functions.addNewDish(dishList);
+                    break;
+                }
+                case "2": {
+                    functions.updateDishPrice(dishList);
+                    pause.pause();
+                    break;
+                }
+                case "3": {
+                    functions.deleteDish(dishList);
+                    pause.pause();
+                    break;
+                }
+                case "4": {
+                    System.out.println("To be added");
+                    pause.pause();
+                    break;
+                }
+                case "5": {
+                    functions.updateManagerWorkExperience(operations);
+                    pause.pause();
+                    break;
+                }
+                case "6": {
+                    operations.deleteManager(managerList);
+                    pause.pause();
+                    break;
+                }
+                default: {
                     System.out.println("No action with index " + option);
                     pause.pause();
                     break;

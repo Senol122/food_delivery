@@ -4,17 +4,15 @@ import food_delivery.services.Identifiable;
 
 public class Client extends User implements Identifiable{
     private String client_id;
-    private String email;
     private String address;
     private OrderHistory history = new OrderHistory();
 
     public Client() {
     }
 
-    public Client(String name, String phone, String email, String address){
-        super(name, phone);
+    public Client(String name, String email, String password, String phone, String address){
+        super(name, email, password, phone);
         this.client_id = genID();
-        this.email = email;
         this.address = address;
     }
 
@@ -43,7 +41,7 @@ public class Client extends User implements Identifiable{
     }
 
     public boolean isEmpty(){
-        return client_id == null && name == null && email == null && address == null;
+        return client_id == null && name == null && email == null && address == null && password == null;
     }
 
     @Override

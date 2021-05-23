@@ -26,6 +26,19 @@ public class DishList {
         return null;
     }
 
+    public void deleteDishByName(String dishName){
+        boolean aux = false;
+        for(int i = 0 ; i < dishList.size() ; i++){
+            if(dishList.get(i).getName().equals(dishName)){
+                aux = true;
+                dishList.remove(i);
+            }
+        }
+        if(!aux){
+            System.out.println("Dish not found.");
+        }
+    }
+
     public ArrayList<Dish> getDishList() {
         return dishList;
     }
