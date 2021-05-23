@@ -168,17 +168,16 @@ public class Main {
             System.out.println();
             System.out.println("Option Menu(choose index of the action)");
             System.out.println("1. See full list of Restaurants");
-            System.out.println("2. See full list of Couriers");
-            System.out.println("3. Search dish by name");
-            System.out.println("4. Add a dish you ate recently(that's not on the platform)");
-            System.out.println("5. See the menu of a specific restaurant");
-            System.out.println("6. Add dish to order");
-            System.out.println("7. See current order");
-            System.out.println("8. Go to checkout");
-            System.out.println("9. See your order history");
-            System.out.println("10. Modify your address");
-            System.out.println("11. Check account info");
-            System.out.println("12. Delete your account");
+            System.out.println("2. Search dish by name");
+            System.out.println("3. Add a dish you ate recently(that's not on the platform)");
+            System.out.println("4. See the menu of a specific restaurant");
+            System.out.println("5. Add dish to order");
+            System.out.println("6. See current order");
+            System.out.println("7. Go to checkout");
+            System.out.println("8. See your order history");
+            System.out.println("9. Modify your address");
+            System.out.println("10. Check account info");
+            System.out.println("11. Delete your account");
             System.out.println("0. Logout");
             System.out.println("\n");
 
@@ -192,59 +191,55 @@ public class Main {
                     break;
                 }
                 case "2":{
-                    System.out.println("...");
-                    pause.pause();
-                    break;
-                }
-                case "3":{
                     System.out.print("Dish name: ");
                     String dishName = dishSearch.nextLine();
                     dishList.dishByName(dishName);
                     pause.pause();
                     break;
                 }
-                case "4": {
+                case "3": {
                     functions.addNewDish(dishList);
+                    pause.pause();
                     break;
                 }
-                case "5":{
+                case "4":{
                     System.out.print("Name of restaurant: ");
                     String menu = menuSearch.nextLine();
                     resList.menuByRestaurant(menu);
                     pause.pause();
                     break;
                 }
-                case "6":{
+                case "5":{
                     functions.addDishToOrder(resList, order);
                     pause.pause();
                     break;
                 }
-                case "7":{
+                case "6":{
                     System.out.println(order);
                     pause.pause();
                     break;
                 }
-                case "8":{
+                case "7":{
                     functions.checkout(order, clientList);
                     pause.pause();
                     break;
                 }
-                case "9":{
+                case "8":{
                     operations.getClient().getOrderHistory();
                     pause.pause();
                     break;
                 }
-                case "10":{
+                case "9":{
                     functions.updateClientAddress(operations);
                     pause.pause();
                     break;
                 }
-                case "11":{
+                case "10":{
                     System.out.println(operations.getClient());
                     pause.pause();
                     break;
                 }
-                case "12": {
+                case "11": {
                     operations.deleteClient(clientList);
                     pause.pause();
                     break;
@@ -347,6 +342,12 @@ public class Main {
                 }
                 case "6": {
                     operations.deleteManager(managerList);
+                    pause.pause();
+                    break;
+                }
+                case "0": {
+                    operations.setLoginStateManager(false);
+                    System.out.println("Logout");
                     pause.pause();
                     break;
                 }
