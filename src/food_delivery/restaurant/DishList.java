@@ -12,6 +12,20 @@ public class DishList {
         this.dishList = dishList;
     }
 
+    public Dish dishByName(String dishName) {
+        boolean aux = false;
+        for(int i = 0 ; i < dishList.size() ; i++){
+            if(dishList.get(i).getName().equals(dishName)){
+                aux = true;
+                return dishList.get(i);
+            }
+        }
+        if(!aux){
+            System.out.println("Dish not found.");
+        }
+        return null;
+    }
+
     public ArrayList<Dish> getDishList() {
         return dishList;
     }

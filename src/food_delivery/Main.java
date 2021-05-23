@@ -37,13 +37,13 @@ public class Main {
 
 //        ------------READING FROM THE FILES-------------------
 
+        functions.createConnection(clientList, delivery, dishList);
+
         String line = "";
 
         try{
             BufferedReader brClients = new BufferedReader(new FileReader("clients.csv"));
-            BufferedReader brCouriers = new BufferedReader(new FileReader("couriers.csv"));
             BufferedReader brSuppliers = new BufferedReader(new FileReader("suppliers.csv"));
-            BufferedReader brDishes = new BufferedReader(new FileReader("dishes.csv"));
             BufferedReader brRestaurants = new BufferedReader(new FileReader("restaurants.csv"));
 
             while((line = brClients.readLine()) != null){
@@ -54,28 +54,12 @@ public class Main {
                 functions.clientControl(clientList, clientX, values);
             }
 
-            while((line = brCouriers.readLine()) != null){
-                String[] values = line.split(",");
-
-                Courier courierX = new Courier();
-
-                functions.courierControl(delivery, courierX, values);
-            }
-
             while((line = brSuppliers.readLine()) != null){
                 String[] values = line.split(",");
 
                 Supplier supplierX = new Supplier();
 
                 functions.supplierControl(supplier, supplierX, values);
-            }
-
-            while((line = brDishes.readLine()) != null){
-                String[] values = line.split(",");
-
-                Dish dishX = new Dish();
-
-                functions.dishControl(dishList, dishX, values);
             }
 
             while((line = brRestaurants.readLine()) != null){
@@ -191,13 +175,14 @@ public class Main {
             System.out.println("1. See full list of Restaurants");
             System.out.println("2. See full list of Couriers");
             System.out.println("3. Search dish by name");
-            System.out.println("4. See the menu of a specific restaurant");
-            System.out.println("5. Add dish to order");
-            System.out.println("6. See current order");
-            System.out.println("7. Go to checkout");
-            System.out.println("8. See your order history");
-            System.out.println("9. Modify your address");
-            System.out.println("10. Check account info");
+            System.out.println("4. Add a dish you ate recently(that's not on the platform)");
+            System.out.println("5. See the menu of a specific restaurant");
+            System.out.println("6. Add dish to order");
+            System.out.println("7. See current order");
+            System.out.println("8. Go to checkout");
+            System.out.println("9. See your order history");
+            System.out.println("10. Modify your address");
+            System.out.println("11. Check account info");
             System.out.println("0. Logout");
             System.out.println("\n");
 
@@ -217,46 +202,50 @@ public class Main {
                 }
                 case "3":{
                     System.out.print("Dish name: ");
-                    String dish = dishSearch.nextLine();
-                    resList.dishByName(dish);
+                    String dishName = dishSearch.nextLine();
+                    dishList.dishByName(dishName);
                     pause.pause();
                     break;
                 }
-                case "4":{
+                case "4": {
+                    functions.addNewDish(dishList);
+                    break;
+                }
+                case "5":{
                     System.out.print("Name of restaurant: ");
                     String menu = menuSearch.nextLine();
                     resList.menuByRestaurant(menu);
                     pause.pause();
                     break;
                 }
-                case "5":{
+                case "6":{
                     functions.addDishToOrder(resList, order);
                     pause.pause();
                     break;
                 }
-                case "6":{
+                case "7":{
                     System.out.println(order);
                     pause.pause();
                     break;
                 }
-                case "7":{
+                case "8":{
                     functions.checkout(order, clientList);
                     pause.pause();
                     break;
                 }
-                case "8":{
+                case "9":{
                     operations.getClient().getOrderHistory();
                     pause.pause();
                     break;
                 }
-                case "9":{
+                case "10":{
                     System.out.print("Enter new address: ");
                     String newAddress = addressInput.nextLine();
                     operations.getClient().setAddress(newAddress);
                     pause.pause();
                     break;
                 }
-                case "10":{
+                case "11":{
                     System.out.println(operations.getClient());
                     pause.pause();
                     break;

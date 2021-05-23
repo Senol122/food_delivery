@@ -11,14 +11,17 @@ import food_delivery.user.Courier;
 import food_delivery.user.Supplier;
 
 import java.io.*;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
 
-public class Functions {
+public class Functions implements Identifiable {
 
+    private PauseTest pause = new PauseTest();
+    Connection con;
     String line = "";
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
     Date date = new Date(System.currentTimeMillis());
@@ -191,12 +194,26 @@ public class Functions {
         }
     }
 
-    public void logRegister(String clientName){
+    public void logClientRegister(String clientName){
         try{
             File file = new File("log.csv");
             FileWriter fr = new FileWriter(file, true);
             BufferedWriter logWriter = new BufferedWriter(fr);
             logWriter.write( "The client with the name " + clientName + " registered at " + format.format(date) );
+            logWriter.newLine();
+            logWriter.close();
+            fr.close();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void logCourierRegister(String courierName){
+        try{
+            File file = new File("log.csv");
+            FileWriter fr = new FileWriter(file, true);
+            BufferedWriter logWriter = new BufferedWriter(fr);
+            logWriter.write( "The courier with the name " + courierName + " registered at " + format.format(date) );
             logWriter.newLine();
             logWriter.close();
             fr.close();
@@ -267,4 +284,195 @@ public class Functions {
         System.out.println("Delivery successfully registered!");
     }
 
+    public void createConnection(ClientList List, DeliveryCompany delivery, DishList dishList) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            Statement statement = con.createStatement();
+            ResultSet clientRS = statement.executeQuery("SELECT * FROM jdbc.clients");
+            while(clientRS.next()){
+                Client aux = new Client();
+
+                String id = clientRS.getString("id");
+                String name = clientRS.getString("name");
+                String phoneNumber = clientRS.getString("phoneNumber");
+                String email = clientRS.getString("email");
+                String address = clientRS.getString("address");
+
+                aux.setClient_id(id);
+                aux.setName(name);
+                aux.setPhone(phoneNumber);
+                aux.setEmail(email);
+                aux.setAddress(address);
+
+                List.addClient(aux);
+            }
+
+            ResultSet courierRS = statement.executeQuery("SELECT * FROM jdbc.couriers");
+            while(courierRS.next()){
+                Courier aux = new Courier();
+
+                String id = courierRS.getString("courierID");
+                String name = courierRS.getString("name");
+                String phoneNumber = courierRS.getString("phoneNumber");
+                String carNumberPlate = courierRS.getString("carNumberPlate");
+
+                aux.setCourier_id(id);
+                aux.setName(name);
+                aux.setPhone(phoneNumber);
+                aux.setCarNumberPlate(carNumberPlate);
+
+                delivery.addCourier(aux);
+            }
+
+            ResultSet dishRS = statement.executeQuery("SELECT * FROM jdbc.dishes");
+            while(dishRS.next()){
+                Dish aux = new Dish();
+
+                String id = dishRS.getString("dishID");
+                String name = dishRS.getString("name");
+                String weight = dishRS.getString("weight");
+                int price = dishRS.getInt("price");
+
+                aux.setDish_id(id);
+                aux.setName(name);
+                aux.setWeight(weight);
+                aux.setPrice(price);
+
+                dishList.addDish(aux);
+            }
+
+            statement.close();
+
+         } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertClient(Client x) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            String id = x.getClient_id();
+            String name = x.getName();
+            String phone = x.getPhone();
+            String email = x.getEmail();
+            String address = x.getAddress();
+
+            Statement statement = con.createStatement();
+
+            String dbInsertClient = "INSERT INTO jdbc.clients VALUES('" + id + "', '"+ name +"', '"+ phone +"', '"+ email +"', '"+ address +"')";
+
+            statement.execute(dbInsertClient);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void insertCourier(Courier x){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            String id = x.getCourier_id();
+            String name = x.getName();
+            String phone = x.getPhone();
+            String carNumberPlate = x.getCarNumberPlate();
+
+            Statement statement = con.createStatement();
+
+            String dbInsertCourier = "INSERT INTO jdbc.couriers VALUES('" + id + "', '"+ name +"', '"+ phone +"', '"+ carNumberPlate +"')";
+
+            statement.execute(dbInsertCourier);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void insertDish(Dish x){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            String id = x.getDish_id();
+            String name = x.getName();
+            String weight = x.getWeight();
+            int price = x.getPrice();
+
+            Statement statement = con.createStatement();
+
+            String dbInsertDish = "INSERT INTO jdbc.dishes VALUES('" + id + "', '"+ name +"', '"+ weight +"', '"+ price +"')";
+
+            statement.execute(dbInsertDish);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void addNewDish(DishList dishList){
+        Scanner nameInput = new Scanner(System.in);
+        Scanner weightInput = new Scanner(System.in);
+        Scanner priceInput = new Scanner(System.in);
+
+        System.out.print("Dish name: ");
+        String name = nameInput.nextLine();
+        System.out.print("Weight(g): ");
+        String weight = weightInput.nextLine();
+        System.out.print("Price: ");
+        int price = Integer.parseInt(priceInput.nextLine());
+
+        boolean ok = false;
+
+        while(!ok) {
+            if(!name.isEmpty() && !weight.isEmpty() && price > 0){
+                Dish newDish = new Dish();
+
+                newDish.setDish_id(genID());
+                newDish.setName(name);
+                newDish.setWeight(weight);
+                newDish.setPrice(price);
+
+                insertDish(newDish);
+                dishList.addDish(newDish);
+                ok = true;
+                System.out.println("Dish successfully added!");
+                pause.pause();
+            } else {
+                System.out.println("Please fill in all fields");
+                pause.pause();
+                System.out.print("Dish name: ");
+                name = nameInput.nextLine();
+                System.out.print("Weight(g): ");
+                weight = weightInput.nextLine();
+                System.out.print("Price: ");
+                price = Integer.parseInt(priceInput.nextLine());
+            }
+        }
+    }
+
+    public void updateClientAddress(Client x) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc", "root", "root");
+
+            Statement statement = con.createStatement();
+
+            String dbUpdateAddress = "UPDATE jdbc.clients SET address='"+ x.getAddress() +"' WHERE(id='"+ x.getClient_id() +"')";
+
+            statement.execute(dbUpdateAddress);
+            statement.close();
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    @Override
+    public String getID() {
+        return null;
+    }
 }

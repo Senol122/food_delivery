@@ -73,14 +73,22 @@ public class AccountOperations implements Identifiable {
                         if(clientList.findClient(emailRegister) != null){
                             System.out.println("There is already an user registered with this email address.");
                             pause.pause();
+                            System.out.print("Name: ");
+                            name = nameInput.nextLine();
+                            System.out.println("Phone: ");
+                            phone = phoneInput.nextLine();
+                            System.out.print("Email: ");
+                            emailRegister = emailRegisterInput.nextLine();
+                            System.out.print("Address: ");
+                            address = addressInput.nextLine();
                         }   else {
                             this.client.setClient_id(genID());
                             this.client.setName(name);
                             this.client.setPhone(phone);
                             this.client.setEmail(emailRegister);
                             this.client.setAddress(address);
-                            functions.logRegister(this.client.getName());
-                            functions.registerClient(this.client);
+                            functions.insertClient(this.client);
+                            functions.logClientRegister(this.client.getName());
                             this.loginStateClient = true;
                             System.out.println("You've registered a new account!");
                             pause.pause();
@@ -114,26 +122,91 @@ public class AccountOperations implements Identifiable {
         Functions functions = new Functions();
 
         Scanner carNumberPlateInput = new Scanner(System.in);
+        Scanner optionInput = new Scanner(System.in);
 
-        System.out.println("Enter your car number plate bellow to login");
-        System.out.print("Car number plate: ");
-        String carNumberPlate = carNumberPlateInput.nextLine();
+        System.out.println("1. Login");
+        System.out.println("2. Register \n");
 
-        while(this.courier.isEmpty()){
-            if(delivery.checkCarNumberPlate(carNumberPlate)){
-                this.courier = delivery.findCourierByCarNumberPlate(carNumberPlate);
-                this.loginStateCourier = true;
-                functions.logLogin(courier.getName());
-                System.out.println("You're logged in!");
-                pause.pause();
-            }   else {
-                System.out.println("Car number plate not found.");
-                pause.pause();
+        System.out.print("Option: ");
+        String option = optionInput.nextLine();
+
+        switch (option) {
+            case "1": {
+                System.out.println("Enter your car number plate bellow to login");
                 System.out.print("Car number plate: ");
-                carNumberPlate = carNumberPlateInput.nextLine();
-            }
+                String carNumberPlate = carNumberPlateInput.nextLine();
 
+                while(this.courier.isEmpty()){
+                    if(delivery.checkCarNumberPlate(carNumberPlate)){
+                        this.courier = delivery.findCourierByCarNumberPlate(carNumberPlate);
+                        this.loginStateCourier = true;
+                        functions.logLogin(courier.getName());
+                        System.out.println("You're logged in!");
+                        pause.pause();
+                    }   else {
+                        System.out.println("Car number plate not found.");
+                        pause.pause();
+                        System.out.print("Car number plate: ");
+                        carNumberPlate = carNumberPlateInput.nextLine();
+                    }
+
+                }
+                break;
+            }
+            case "2" :{
+                Scanner nameInput = new Scanner(System.in);
+                Scanner phoneInput = new Scanner(System.in);
+                Scanner carNumberPlateRegisterInput = new Scanner(System.in);
+
+                System.out.print("Name: ");
+                String name = nameInput.nextLine();
+                System.out.print("Phone: ");
+                String phone = phoneInput.nextLine();
+                System.out.print("Car Number Plate: ");
+                String carNumberPlateRegister = carNumberPlateRegisterInput.nextLine();
+
+                while(this.courier.isEmpty()){
+                    if(name != null && phone != null && carNumberPlateRegister != null){
+                        if(delivery.findCourierByCarNumberPlate(carNumberPlateRegister) != null){
+                            System.out.println("There is already a courier registered with this car number plate.");
+                            System.out.print("Name: ");
+                            name = nameInput.nextLine();
+                            System.out.println("Phone: ");
+                            phone = phoneInput.nextLine();
+                            System.out.print("Car Number Plate: ");
+                            carNumberPlateRegister = carNumberPlateRegisterInput.nextLine();
+                            pause.pause();
+                        } else {
+                            this.courier.setCourier_id(genID());
+                            this.courier.setName(name);
+                            this.courier.setPhone(phone);
+                            this.courier.setCarNumberPlate(carNumberPlateRegister);
+                            this.loginStateCourier = true;
+                            functions.insertCourier(this.courier);
+                            functions.logCourierRegister(this.courier.getName());
+                            System.out.println("You're logged in!");
+                            pause.pause();
+                        }
+                    }   else {
+                        System.out.println("Please fill in all fields.");
+                        pause.pause();
+                        System.out.print("Name: ");
+                        name = nameInput.nextLine();
+                        System.out.println("Phone: ");
+                        phone = phoneInput.nextLine();
+                        System.out.print("Car Number Plate: ");
+                        carNumberPlateRegister = carNumberPlateRegisterInput.nextLine();
+                    }
+                }
+                break;
+            }
+            default: {
+                System.out.println("Option not found. Please choose 1 for Login or 2 for Register");
+                break;
+            }
         }
+
+
     }
 
     public void loginSupplier(SupplierCompany supplier){
